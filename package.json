@@ -1,0 +1,21 @@
+{
+  "name": "www",
+  "privae": true,
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "cd blog && wintersmith build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/birdduck/www.git"
+  },
+  "dependencies": {
+    "node-static": "0.6.9"
+  },
+  "devDependencies": {
+    "wintersmith": "2.0.5"
+  },
+  "author": "Bird Duck Software",
+  "license": "MIT"
+}

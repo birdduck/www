@@ -1,0 +1,27 @@
+{
+  "locals": {
+    "url": "http://birdducksoftware.com",
+    "name": "Bird Duck Software",
+    "owner": "Bird Duck Software",
+    "description": "We make it good."
+  },
+  "plugins": [
+    "./plugins/paginator.coffee"
+  ],
+  "require": {
+    "moment": "moment",
+    "_": "underscore",
+    "typogr": "typogr"
+  },
+  "jade": {
+    "pretty": true
+  },
+  "markdown": {
+    "smartLists": true,
+    "smartypants": true
+  },
+  "paginator": {
+    "perPage": 3
+  },
+  "output": "../public"
+}
