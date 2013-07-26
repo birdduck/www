@@ -16,6 +16,10 @@
   "devDependencies": {
     "wintersmith": "2.0.5"
   },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.3.x"
+  },
   "author": "Bird Duck Software",
   "license": "MIT"
 }
