@@ -14,8 +14,9 @@
       <pubDate>Wed, 24 Jul 2013 11:15:00 +0000</pubDate>
       <guid isPermaLink="true">http://birdducksoftware.com/articles/hello-world/</guid>
       <author></author>
-      <description>&lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;defn&lt;/span&gt;&lt;/span&gt; hello-world! &lt;span class=&quot;collection&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;hello world&quot;&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;h2&gt;Wisp is a wonderful, interesting thing&lt;/h2&gt;
+      <description>&lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;defn&lt;/span&gt;&lt;/span&gt; hello-world! &lt;span class=&quot;collection&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;hello world&quot;&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;wisp-is-a-wonderful-interesting-thing&quot;&gt;Wisp is a wonderful, interesting thing&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/Gozala/wisp&quot;&gt;Wisp&lt;/a&gt; is yet another language that transpiles to JavaScript, but with a very
 noble goal of providing a native subset of &lt;a href=&quot;http://clojure.org/&quot;&gt;Clojure&lt;/a&gt; and &lt;a href=&quot;https://github.com/clojure/clojurescript&quot;&gt;Clojurescript&lt;/a&gt;.
 Achieving this mission should provide portability between the two 
@@ -29,19 +30,22 @@ exercise. Luckily there are several viable open source implementations that can
 serve as inspiration. Given the general success of &lt;a href=&quot;http://coffeescript.org/&quot;&gt;CoffeeScript&lt;/a&gt;, an answer
 to &lt;a href=&quot;http://www.ruby-lang.org/&quot;&gt;Ruby&lt;/a&gt;, it seems a natural place to start.&lt;/p&gt;
 &lt;p&gt;Take &lt;a href=&quot;http://coffeescript.org/documentation/docs/optparse.html#section-10&quot;&gt;this innocuous helper function&lt;/a&gt; defined in &lt;code&gt;optparse.coffee&lt;/code&gt; for instance…&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;lang-coffeescript&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;buildRules&lt;/span&gt;&lt;/span&gt; = (rules) -&amp;gt;
+&lt;pre&gt;&lt;code class=&quot;lang-coffeescript&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;buildRules&lt;/span&gt; = &lt;span class=&quot;params&quot;&gt;(rules)&lt;/span&gt; -&amp;gt;&lt;/span&gt;
   &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; tuple &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; rules
     tuple.unshift &lt;span class=&quot;literal&quot;&gt;null&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; tuple.length &amp;lt; &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;
-    buildRule tuple...&lt;/code&gt;&lt;/pre&gt;
+    buildRule tuple...
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The first step to approximating this function is defining its analogue in Wisp.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;defn&lt;/span&gt;&lt;/span&gt; build-rules
-  &lt;span class=&quot;collection&quot;&gt;[rules]&lt;/span&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+  &lt;span class=&quot;collection&quot;&gt;[rules]&lt;/span&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;At first glance you might notice the difference in the names of the functions.
 When this Wisp code is transpiled the function will be translated into a
 &lt;a href=&quot;http://c2.com/cgi/wiki?CamelCase&quot;&gt;camel cased&lt;/a&gt; version.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; buildRules = &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;buildRules&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(rules)&lt;/span&gt; {&lt;/span&gt;
   &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;);
-};&lt;/code&gt;&lt;/pre&gt;
+};
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This is &lt;a href=&quot;https://github.com/Gozala/wisp#conventions&quot;&gt;one of the many clever features&lt;/a&gt; of the Wisp language coming 
 to the rescue!&lt;/p&gt;
 &lt;p&gt;To continue the exercise of approximation a key insight can be gleaned in the
@@ -50,7 +54,8 @@ use the &lt;code&gt;map&lt;/code&gt; function with the preexisting function, def
 the innermost recesses of &lt;code&gt;optparse.coffee&lt;/code&gt;, called &lt;code&gt;buildRule&lt;/code&gt;.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;defn&lt;/span&gt;&lt;/span&gt; build-rules
   &lt;span class=&quot;collection&quot;&gt;[rules]&lt;/span&gt;
-  &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;map&lt;/span&gt;&lt;/span&gt; build-rule rules)&lt;/span&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+  &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;map&lt;/span&gt;&lt;/span&gt; build-rule rules)&lt;/span&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Simple as that, right? Not quite. Every good translation should maintain fidelity
 with the source material, and therefore we have no choice but to incorporate
 the conditional prepend of &lt;code&gt;null&lt;/code&gt; to the rule when the &lt;code&gt;length&lt;/code&gt; is less than three.
@@ -64,8 +69,9 @@ Luckily we can define a function inline just like JavaScript.&lt;/p&gt;
         &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;if&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;&amp;lt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;count&lt;/span&gt;&lt;/span&gt; rule)&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 3&lt;/span&gt;)&lt;/span&gt;
           &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;concat&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt; rule)&lt;/span&gt;
           rule)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
-    rules)&lt;/span&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;That wasn&amp;#39;t so hard, was it? There are a few differences in implementation that
+    rules)&lt;/span&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That wasn’t so hard, was it? There are a few differences in implementation that
 are obvious. Rather than &lt;code&gt;null&lt;/code&gt; there is &lt;code&gt;nil&lt;/code&gt;. A key difference between the two
 is that in the transpiled code &lt;code&gt;nil&lt;/code&gt; will actually become &lt;code&gt;void(0)&lt;/code&gt;, or
 &lt;code&gt;undefined&lt;/code&gt; as it is more commonly known. Rather than use native properties or
@@ -73,26 +79,28 @@ functions to retrieve the &lt;code&gt;length&lt;/code&gt; and prepend an item th
 &lt;code&gt;concat&lt;/code&gt;. These functions are imported from the &lt;code&gt;wisp.sequence&lt;/code&gt; namespace.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;ns&lt;/span&gt;&lt;/span&gt; wisp.optparse
   &lt;span class=&quot;string&quot;&gt;&quot;Wisp command line parsing&quot;&lt;/span&gt;
-  &lt;span class=&quot;list&quot;&gt;(:&lt;span class=&quot;title&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;collection&quot;&gt;[wisp.sequence &lt;span class=&quot;attribute&quot;&gt;:refer&lt;/span&gt; &lt;span class=&quot;collection&quot;&gt;[count concat map]&lt;/span&gt;]&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;One more thing: this function isn&amp;#39;t quite right. The CoffeeScript literate
+  &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;attribute&quot;&gt;:require&lt;/span&gt; &lt;span class=&quot;collection&quot;&gt;[wisp.sequence &lt;span class=&quot;attribute&quot;&gt;:refer&lt;/span&gt; &lt;span class=&quot;collection&quot;&gt;[count concat map]&lt;/span&gt;]&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;One more thing: this function isn’t quite right. The CoffeeScript literate
 already know what is missing, but for those learning as we go it comes down to
 the ellipsis trailing that woeful &lt;code&gt;tuple&lt;/code&gt;. A clue lurks in &lt;a href=&quot;http://coffeescript.org/documentation/docs/optparse.html#section-11&quot;&gt;the definition&lt;/a&gt; of
 &lt;code&gt;buildRule&lt;/code&gt;.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;lang-coffeescript&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;buildRule&lt;/span&gt;&lt;/span&gt; = (shortFlag, longFlag, description, options = {}) -&amp;gt;
+&lt;pre&gt;&lt;code class=&quot;lang-coffeescript&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;title&quot;&gt;buildRule&lt;/span&gt; = &lt;span class=&quot;params&quot;&gt;(shortFlag, longFlag, description, options = {})&lt;/span&gt; -&amp;gt;&lt;/span&gt;
   match     = longFlag.match(OPTIONAL)
   longFlag  = longFlag.match(LONG_FLAG)[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;]
   {
-    name:         longFlag.substr &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;
-    shortFlag:    shortFlag
-    longFlag:     longFlag
-    description:  description
-    hasArgument:  !!(match &lt;span class=&quot;keyword&quot;&gt;and&lt;/span&gt; match[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;])
-    isList:       !!(match &lt;span class=&quot;keyword&quot;&gt;and&lt;/span&gt; match[&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;])
-  }&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Do you see it? That&amp;#39;s absolutely right. This function takes several arguments and
+    &lt;span class=&quot;attribute&quot;&gt;name&lt;/span&gt;:         longFlag.substr &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;
+    &lt;span class=&quot;attribute&quot;&gt;shortFlag&lt;/span&gt;:    shortFlag
+    &lt;span class=&quot;attribute&quot;&gt;longFlag&lt;/span&gt;:     longFlag
+    &lt;span class=&quot;attribute&quot;&gt;description&lt;/span&gt;:  description
+    &lt;span class=&quot;attribute&quot;&gt;hasArgument&lt;/span&gt;:  !!(match &lt;span class=&quot;keyword&quot;&gt;and&lt;/span&gt; match[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;])
+    &lt;span class=&quot;attribute&quot;&gt;isList&lt;/span&gt;:       !!(match &lt;span class=&quot;keyword&quot;&gt;and&lt;/span&gt; match[&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;])
+  }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Do you see it? That’s absolutely right. This function takes several arguments and
 not a single array! This means that rather than using &lt;code&gt;rule&lt;/code&gt; or &lt;code&gt;tuple&lt;/code&gt; as the
 sole argument that the items that comprise them should be used instead. What this
-really means is that our &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply&quot;&gt;ol&amp;#39; friend&lt;/a&gt; &lt;code&gt;apply&lt;/code&gt; is at it again. Fret not, for
+really means is that our &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply&quot;&gt;ol’ friend&lt;/a&gt; &lt;code&gt;apply&lt;/code&gt; is at it again. Fret not, for
 Wisp has an answer.&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;defn&lt;/span&gt;&lt;/span&gt; build-rules
   &lt;span class=&quot;collection&quot;&gt;[rules]&lt;/span&gt;
@@ -103,13 +111,14 @@ Wisp has an answer.&lt;/p&gt;
         &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;if&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;&amp;lt;&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;count&lt;/span&gt;&lt;/span&gt; rule)&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 3&lt;/span&gt;)&lt;/span&gt;
           &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;concat&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;nil&lt;/span&gt; rule)&lt;/span&gt; 
           rule)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
-    rules)&lt;/span&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Perfect. Out of curiosity, edification let&amp;#39;s compare the results of transpiling
+    rules)&lt;/span&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Perfect. Out of curiosity, edification let’s compare the results of transpiling
 each of these functions from their respective language.&lt;/p&gt;
 &lt;p&gt;The result of compiling the CoffeeScript version:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; buildRules;
 
-buildRules = &lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(rules) {
+buildRules = &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(rules)&lt;/span&gt; {&lt;/span&gt;
   &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; tuple, _i, _len, _results;
   _results = [];
   &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; (_i = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, _len = rules.length; _i &amp;lt; _len; _i++) {
@@ -120,15 +129,17 @@ buildRules = &lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(rules) 
     _results.push(buildRule.apply(&lt;span class=&quot;literal&quot;&gt;null&lt;/span&gt;, tuple));
   }
   &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; _results;
-};x&lt;/code&gt;&lt;/pre&gt;
+};x
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The result of compiling the Wisp version:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; buildRules = &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;buildRules&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(rules)&lt;/span&gt; {&lt;/span&gt;
-  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; map(&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(rule) {
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; map(&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(rule)&lt;/span&gt; {&lt;/span&gt;
     &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; buildRule.apply(buildRule, count(rule) &amp;lt; &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt; ?
       concat(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;(&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;), rule) :
       rule);
   }, rules);
-};&lt;/code&gt;&lt;/pre&gt;
+};
+&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Okay, this may not be comparing apples to apples, as the functions &lt;code&gt;count&lt;/code&gt;, &lt;code&gt;concat&lt;/code&gt;,
 and &lt;code&gt;map&lt;/code&gt; that were imported from &lt;code&gt;wisp.sequence&lt;/code&gt; are not included, but it is short
 and it is sweet (much like an orange). &lt;/p&gt;
