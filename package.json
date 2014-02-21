@@ -1,6 +1,6 @@
 {
   "name": "www",
-  "privae": true,
+  "private": true,
   "version": "0.0.0",
   "main": "lib/index.js",
   "scripts": {
@@ -11,10 +11,13 @@
     "url": "git://github.com/birdduck/www.git"
   },
   "dependencies": {
-    "node-static": "0.6.9"
+    "moment": "2.5.1",
+    "node-static": "0.7.3",
+    "typogr": "0.6.2",
+    "underscore": "1.6.0"
   },
   "devDependencies": {
-    "wintersmith": "2.0.5"
+    "wintersmith": "2.0.10"
   },
   "engines": {
     "node": "0.10.x",
