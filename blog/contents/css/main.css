@@ -109,6 +109,10 @@ hr {
   letter-spacing: 1px;
 }
 
+.header .author > span[itemprop] {
+  display: none;
+}
+
 .header .description {
   font-size: 1.2em;
   font-style: italic;
@@ -431,4 +435,3 @@ code.lang-markdown .bullet {
     margin-bottom: 1em;
   }
 }
-

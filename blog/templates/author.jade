@@ -1,8 +1,13 @@
 
 mixin author(authorName)
-  - var author = contents.authors[authorName + '.json']
-  span.author
+  - var properties = ['title', 'affiliation'];
+  - var author = contents.authors[authorName + '.json'];
+  span.author(itemscope, itemtype='http://data-vocabulary.org/Person')
     if author
-      a(href='mailto:'+author.metadata.email)= author.metadata.name
+      a(href='mailto:'+author.metadata.email)
+        span(itemprop='name')= author.metadata.name
+      each property in properties
+        if author.metadata[property]
+          span(itemprop=property)= author.metadata[property]
     else
-      =authorName
+      span(itemprop='name')= authorName
