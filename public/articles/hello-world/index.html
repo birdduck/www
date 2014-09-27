@@ -14,7 +14,7 @@
     <header class="header">
       <div class="content-wrap">
         <h1>Hello World</h1>
-        <p class="author">Written by <span class="author"><a href="mailto:the30yearswar@hotmail.com">Colin Teal</a></span>
+        <p class="author">Written by <span itemscope itemtype="http://data-vocabulary.org/Person" class="author"><a href="mailto:the30yearswar@hotmail.com"><span itemprop="name">Colin Teal</span></a><span itemprop="title">Software Engineer</span><span itemprop="affiliation">Rival IQ</span></span>
         </p>
       </div>
     </header>
@@ -31,12 +31,12 @@ Achieving this mission should provide portability between the two
 <p>In the quest to learn functional programming without the overhead of an invasive
 Java installation or worrying about <a href="https://github.com/technomancy/leiningen">leiningen</a>, Wisp, which you
 <a href="http://jeditoolkit.com/try-wisp/">really must try</a>, was a bright light in an otherwise stark darkness.
-During our stay here it would be nice to <a href="https://github.com/Gozala/wisp/issues/19">help the burgeoning language out</a> too.</p>
+During our stay here it would be nice to <a href="https://github.com/Gozala/wisp/issues/19">help the burgeoning language out</a>&nbsp;too.</p>
 <p>Parsing arguments on the command line is not a traditionally fun, rewarding
 exercise. Luckily there are several viable open source implementations that can
 serve as inspiration. Given the general success of <a href="http://coffeescript.org/">CoffeeScript</a>, an answer
 to <a href="http://www.ruby-lang.org/">Ruby</a>, it seems a natural place to&nbsp;start.</p>
-<p>Take <a href="http://coffeescript.org/documentation/docs/optparse.html#section-10">this innocuous helper function</a> defined in <code>optparse.coffee</code> for&nbsp;instance…</p>
+<p>Take <a href="http://coffeescript.org/documentation/docs/optparse.html#section-10">this innocuous helper function</a> defined in <code>optparse.coffee</code> for instance…</p>
 <pre><code class="lang-coffeescript"><span class="function"><span class="title">buildRules</span> = <span class="params">(rules)</span> -&gt;</span>
   <span class="keyword">for</span> tuple <span class="keyword">in</span> rules
     tuple.unshift <span class="literal">null</span> <span class="keyword">if</span> tuple.length &lt; <span class="number">3</span>
@@ -48,7 +48,7 @@ to <a href="http://www.ruby-lang.org/">Ruby</a>, it seems a natural place to&nbs
 </code></pre>
 <p>At first glance you might notice the difference in the names of the functions.
 When this Wisp code is transpiled the function will be translated into a
-<a href="http://c2.com/cgi/wiki?CamelCase">camel cased</a> version.</p>
+<a href="http://c2.com/cgi/wiki?CamelCase">camel cased</a>&nbsp;version.</p>
 <pre><code class="lang-javascript"><span class="keyword">var</span> buildRules = <span class="function"><span class="keyword">function</span> <span class="title">buildRules</span><span class="params">(rules)</span> {</span>
   <span class="keyword">return</span> <span class="keyword">void</span>(<span class="number">0</span>);
 };
