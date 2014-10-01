@@ -5,9 +5,184 @@
     <atom:link href="http://birdducksoftware.com/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://birdducksoftware.com</link>
     <description>We make it good.</description>
-    <pubDate>Wed, 24 Jul 2013 11:15:00 +0000</pubDate>
+    <pubDate>Tue, 30 Sep 2014 11:15:00 +0000</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Random Avatars, Approximately</title>
+      <link>http://birdducksoftware.com/articles/random-avatars-approximately/</link>
+      <pubDate>Tue, 30 Sep 2014 11:15:00 +0000</pubDate>
+      <guid isPermaLink="true">http://birdducksoftware.com/articles/random-avatars-approximately/</guid>
+      <author></author>
+      <description>&lt;p&gt;We had a problem while working on &lt;a href=&quot;http://monsters.io&quot;&gt;World of Monsters&lt;/a&gt;: how can aesthetic
+traits be randomized predictably in a fashion that can be easily reproduced?
+The long term goal is to use inheritable genes, but to bring monsters
+temporarily to life we needed…&lt;em&gt;something&lt;/em&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;eureka-something-like-noise-functions-and-avatars-&quot;&gt;Eureka, something like noise functions and avatars!&lt;/h2&gt;
+&lt;p&gt;This problem &lt;a href=&quot;http://blog.gravatar.com/2008/04/22/identicons-monsterids-and-wavatars-oh-my/&quot;&gt;has been solved before&lt;/a&gt;, and probably better, but this is what we
+ended up with. Sometimes being deficient in mathematics can make the adventure
+that is software development more fun, albeit woefully inefficient.&lt;/p&gt;
+&lt;p&gt;First, we need a deterministic seed. Luckily for us, each monster has a name and
+an identifier. We know that each character in the name of a monster can be
+&lt;a href=&quot;http://www.asciitable.com/&quot;&gt;represented with a decimal in ASCII&lt;/a&gt;. Perfect.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;getMonsterSeed&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(monster)&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// default seed to the monster id, giving it&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// some uniqueness&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; seed = monster.id;
+  &lt;span class=&quot;comment&quot;&gt;// grab the monster name, as it is more flavor&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; name = monster.name
+
+  &lt;span class=&quot;comment&quot;&gt;// iterate over each character in the name, adding&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// its value to our seed&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; i = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, l = name.length; i &amp;lt; l; i++) {
+    seed += name.charCodeAt(i);
+  }
+
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; seed;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now that we have a deterministic seed from a monster, we can use this value to
+generate psuedo-random numbers, which become useful with the help of this simple
+method (which is based on &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random&quot;&gt;an implementation here&lt;/a&gt;).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;getRandomInt&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(min, max, seed)&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// if a seed is specified use it, otherwise create one&lt;/span&gt;
+  seed = seed || &lt;span class=&quot;built_in&quot;&gt;Math&lt;/span&gt;.random();
+  &lt;span class=&quot;comment&quot;&gt;// generate a random integer within the specified range&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;Math&lt;/span&gt;.floor(seed * (max - min)) + min;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Great. So we have our seed, and we have a method to generate random integers
+within a range. How can we use this to get monster traits? Well, that’s simple.
+We need to generate trait seeds from our base seed.
+Let’s see what that might look like for eye color.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;getMonsterEyeColorSeed&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(monster)&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// start with the base monster seed (an integer)&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; eyeColorSeed = getMonsterSeed(monster);
+
+  &lt;span class=&quot;comment&quot;&gt;// boil down our seed by some fraction until it is a decimal&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// it is important that all methods generating a sub-seed do&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// so in a fashion that does not collide with others&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (eyeColorSeed &amp;gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) {
+    eyeColorSeed /= &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;;
+  }
+
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; eyeColorSeed;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;OK. Now we have an eye color seed that is a decimal, in addition to having a
+base seed integer. What are we going to do with our trait seed that will suddenly
+turn into something expressive, that we can, like, see? Remember our random range
+method, and the optional seed parameter? Well…this might be easier done than said.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;getMonsterEyeColor&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(monster)&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// here are the available eye colors&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; eyeColors = [
+    &lt;span class=&quot;string&quot;&gt;'334F53'&lt;/span&gt;,
+    &lt;span class=&quot;string&quot;&gt;'C8C9C9'&lt;/span&gt;,
+    &lt;span class=&quot;string&quot;&gt;'574840'&lt;/span&gt;,
+    &lt;span class=&quot;string&quot;&gt;'5F6401'&lt;/span&gt;,
+    &lt;span class=&quot;string&quot;&gt;'C5DAED'&lt;/span&gt;
+  ];
+
+  &lt;span class=&quot;comment&quot;&gt;// let's get the eye color seed for this monster&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; eyeColorSeed = getMonsterEyeColorSeed(monster);
+
+  &lt;span class=&quot;comment&quot;&gt;// ah ha! now we use the eye color seed to grab a color&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// out of our array&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; eyeColorIndex = getRandomInt(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, eyeColors.length,
+    eyeColorSeed) - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;
+
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;'#'&lt;/span&gt; + eyeColors[eyeColorIndex];
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;With everything we built above, we now have a method for getting a monster’s eye
+color that is somewhat random. Random enough, anyway. Never mind that our model
+breaks down when a monster legally changes their name, or that the distribution
+of traits is by no means sound (maybe this is okay, it is a lot closer to how
+genes actually work). You’ll need to suspend your disbelief with respect to
+collisions (they are &lt;strong&gt;totally possible&lt;/strong&gt;) between monster seeds. The worst
+that can happen is two monsters without a common lineage accidentally share the
+exact same genetic material. It’s good enough, for now, and maybe it is good
+enough for you.&lt;/p&gt;
+&lt;p&gt;Let’s see the entire thing, shall we.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;getRandomInt&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(min, max, seed)&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// if a seed is specified use it, otherwise create one&lt;/span&gt;
+  seed = seed || &lt;span class=&quot;built_in&quot;&gt;Math&lt;/span&gt;.random();
+  &lt;span class=&quot;comment&quot;&gt;// generate a random integer within the specified range&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;built_in&quot;&gt;Math&lt;/span&gt;.floor(seed * (max - min)) + min;
+}
+
+&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;getMonsterSeed&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(monster)&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// default seed to the monster id, giving it&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// some uniqueness&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; seed = monster.id;
+  &lt;span class=&quot;comment&quot;&gt;// grab the monster name, as it is more flavor&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; name = monster.name
+
+  &lt;span class=&quot;comment&quot;&gt;// iterate over each character in the name, adding&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// its value to our seed&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; i = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, l = name.length; i &amp;lt; l; i++) {
+    seed += name.charCodeAt(i);
+  }
+
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; seed;
+}
+
+&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;getMonsterEyeColorSeed&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(monster)&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// start with the base monster seed (an integer)&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; eyeColorSeed = getMonsterSeed(monster);
+
+  &lt;span class=&quot;comment&quot;&gt;// boil down our seed by some fraction until it is a decimal&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// it is important that all methods generating a sub-seed do&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// so in a fashion that does not collide with others&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;while&lt;/span&gt; (eyeColorSeed &amp;gt; &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;) {
+    eyeColorSeed /= &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;;
+  }
+
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; eyeColorSeed;
+}
+
+&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;getMonsterEyeColor&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(monster)&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// here are the available eye colors&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; eyeColors = [
+    &lt;span class=&quot;string&quot;&gt;'334F53'&lt;/span&gt;,
+    &lt;span class=&quot;string&quot;&gt;'C8C9C9'&lt;/span&gt;,
+    &lt;span class=&quot;string&quot;&gt;'574840'&lt;/span&gt;,
+    &lt;span class=&quot;string&quot;&gt;'5F6401'&lt;/span&gt;,
+    &lt;span class=&quot;string&quot;&gt;'C5DAED'&lt;/span&gt;
+  ];
+
+  &lt;span class=&quot;comment&quot;&gt;// let's get the eye color seed for this monster&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; eyeColorSeed = getMonsterEyeColorSeed(monster);
+
+  &lt;span class=&quot;comment&quot;&gt;// ah ha! now we use the eye color seed to grab a color&lt;/span&gt;
+  &lt;span class=&quot;comment&quot;&gt;// out of our array&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; eyeColorIndex = getRandomInt(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, eyeColors.length,
+    eyeColorSeed) - &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;
+
+  &lt;span class=&quot;comment&quot;&gt;// pound it out&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;'#'&lt;/span&gt; + eyeColors[eyeColorIndex];
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And how might we use this?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// what a vile creature that Kevin is...&lt;/span&gt;
+&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; monster = { id: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;, name: &lt;span class=&quot;string&quot;&gt;'Kevin'&lt;/span&gt; };
+&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; monsterEyeColor = getMonsterEyeColor(monster);
+console.log(monsterEyeColor); &lt;span class=&quot;comment&quot;&gt;// #574840&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Proof that it is psuedo-random, dynamic?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// STELLLLLLAAAAAAAAAAAAAAAAAAAAAAAAA...&lt;/span&gt;
+&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; monster = { id: &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, name: &lt;span class=&quot;string&quot;&gt;'Stella'&lt;/span&gt; };
+&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; monsterEyeColor = getMonsterEyeColor(monster);
+console.log(monsterEyeColor); &lt;span class=&quot;comment&quot;&gt;// #5F6401&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is how &lt;a href=&quot;http://monsters.io&quot;&gt;World of Monsters&lt;/a&gt; at present generates &lt;a href=&quot;https://dl.dropboxusercontent.com/u/37456399/monster.png&quot;&gt;random monster renderings&lt;/a&gt;
+that never differ, and are always the same for each monster. The body, and eye color
+are driven by the technique laid out above. We might use this approach to determine
+if monsters have horns and how many of them, whether they have hair and what color,
+and perhaps even subtle information about appendages (flippers, tentacles,
+arms, etc.). Who knows!&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Hello World</title>
       <link>http://birdducksoftware.com/articles/hello-world/</link>

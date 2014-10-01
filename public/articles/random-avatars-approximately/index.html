@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Random Avatars, Approximately - Bird Duck Software
+    </title>
+    <link rel="alternate" href="http://birdducksoftware.com/feed.xml" type="application/rss+xml" title="We make it good.">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Random Avatars, Approximately</h1>
+        <p class="author">Written by <span itemscope itemtype="http://data-vocabulary.org/Person" class="author"><a href="mailto:the30yearswar@hotmail.com"><span itemprop="name">Colin Teal</span></a><span itemprop="title">Software Engineer</span><span itemprop="affiliation">Rival IQ</span></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>We had a problem while working on <a href="http://monsters.io">World of Monsters</a>: how can aesthetic
+traits be randomized predictably in a fashion that can be easily reproduced?
+The long term goal is to use inheritable genes, but to bring monsters
+temporarily to life we needed…<em>something</em>.</p>
+<h2 id="eureka-something-like-noise-functions-and-avatars-">Eureka, something like noise functions and&nbsp;avatars!</h2>
+<p>This problem <a href="http://blog.gravatar.com/2008/04/22/identicons-monsterids-and-wavatars-oh-my/">has been solved before</a>, and probably better, but this is what we
+ended up with. Sometimes being deficient in mathematics can make the adventure
+that is software development more fun, albeit woefully&nbsp;inefficient.</p>
+<p>First, we need a deterministic seed. Luckily for us, each monster has a name and
+an identifier. We know that each character in the name of a monster can be
+<a href="http://www.asciitable.com/">represented with a decimal in <span class="caps">ASCII</span></a>. Perfect.</p>
+<pre><code class="lang-javascript"><span class="function"><span class="keyword">function</span> <span class="title">getMonsterSeed</span><span class="params">(monster)</span> {</span>
+  <span class="comment">// default seed to the monster id, giving it</span>
+  <span class="comment">// some uniqueness</span>
+  <span class="keyword">var</span> seed = monster.id;
+  <span class="comment">// grab the monster name, as it is more flavor</span>
+  <span class="keyword">var</span> name = monster.name
+
+  <span class="comment">// iterate over each character in the name, adding</span>
+  <span class="comment">// its value to our seed</span>
+  <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, l = name.length; i &lt; l; i++) {
+    seed += name.charCodeAt(i);
+  }
+
+  <span class="keyword">return</span> seed;
+}
+</code></pre>
+<p>Now that we have a deterministic seed from a monster, we can use this value to
+generate psuedo-random numbers, which become useful with the help of this simple
+method (which is based on <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random">an implementation here</a>).</p>
+<pre><code class="lang-javascript"><span class="function"><span class="keyword">function</span> <span class="title">getRandomInt</span><span class="params">(min, max, seed)</span> {</span>
+  <span class="comment">// if a seed is specified use it, otherwise create one</span>
+  seed = seed || <span class="built_in">Math</span>.random();
+  <span class="comment">// generate a random integer within the specified range</span>
+  <span class="keyword">return</span> <span class="built_in">Math</span>.floor(seed * (max - min)) + min;
+}
+</code></pre>
+<p>Great. So we have our seed, and we have a method to generate random integers
+within a range. How can we use this to get monster traits? Well, that’s simple.
+We need to generate trait seeds from our base seed.
+Let’s see what that might look like for eye&nbsp;color.</p>
+<pre><code class="lang-javascript"><span class="function"><span class="keyword">function</span> <span class="title">getMonsterEyeColorSeed</span><span class="params">(monster)</span> {</span>
+  <span class="comment">// start with the base monster seed (an integer)</span>
+  <span class="keyword">var</span> eyeColorSeed = getMonsterSeed(monster);
+
+  <span class="comment">// boil down our seed by some fraction until it is a decimal</span>
+  <span class="comment">// it is important that all methods generating a sub-seed do</span>
+  <span class="comment">// so in a fashion that does not collide with others</span>
+  <span class="keyword">while</span> (eyeColorSeed &gt; <span class="number">1</span>) {
+    eyeColorSeed /= <span class="number">3</span>;
+  }
+
+  <span class="keyword">return</span> eyeColorSeed;
+}
+</code></pre>
+<p><span class="caps">OK</span>. Now we have an eye color seed that is a decimal, in addition to having a
+base seed integer. What are we going to do with our trait seed that will suddenly
+turn into something expressive, that we can, like, see? Remember our random range
+method, and the optional seed parameter? Well…this might be easier done than&nbsp;said.</p>
+<pre><code class="lang-javascript"><span class="function"><span class="keyword">function</span> <span class="title">getMonsterEyeColor</span><span class="params">(monster)</span> {</span>
+  <span class="comment">// here are the available eye colors</span>
+  <span class="keyword">var</span> eyeColors = [
+    <span class="string">'334F53'</span>,
+    <span class="string">'<span class="caps">C8C9C9</span>'</span>,
+    <span class="string">'574840'</span>,
+    <span class="string">'5F6401'</span>,
+    <span class="string">'<span class="caps">C5DAED</span>'</span>
+  ];
+
+  <span class="comment">// let's get the eye color seed for this monster</span>
+  <span class="keyword">var</span> eyeColorSeed = getMonsterEyeColorSeed(monster);
+
+  <span class="comment">// ah ha! now we use the eye color seed to grab a color</span>
+  <span class="comment">// out of our array</span>
+  <span class="keyword">var</span> eyeColorIndex = getRandomInt(<span class="number">1</span>, eyeColors.length,
+    eyeColorSeed) - <span class="number">1</span>;
+
+  <span class="keyword">return</span> <span class="string">'#'</span> + eyeColors[eyeColorIndex];
+}
+</code></pre>
+<p>With everything we built above, we now have a method for getting a monster’s eye
+color that is somewhat random. Random enough, anyway. Never mind that our model
+breaks down when a monster legally changes their name, or that the distribution
+of traits is by no means sound (maybe this is okay, it is a lot closer to how
+genes actually work). You’ll need to suspend your disbelief with respect to
+collisions (they are <strong>totally possible</strong>) between monster seeds. The worst
+that can happen is two monsters without a common lineage accidentally share the
+exact same genetic material. It’s good enough, for now, and maybe it is good
+enough for&nbsp;you.</p>
+<p>Let’s see the entire thing, shall&nbsp;we.</p>
+<pre><code class="lang-javascript"><span class="function"><span class="keyword">function</span> <span class="title">getRandomInt</span><span class="params">(min, max, seed)</span> {</span>
+  <span class="comment">// if a seed is specified use it, otherwise create one</span>
+  seed = seed || <span class="built_in">Math</span>.random();
+  <span class="comment">// generate a random integer within the specified range</span>
+  <span class="keyword">return</span> <span class="built_in">Math</span>.floor(seed * (max - min)) + min;
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">getMonsterSeed</span><span class="params">(monster)</span> {</span>
+  <span class="comment">// default seed to the monster id, giving it</span>
+  <span class="comment">// some uniqueness</span>
+  <span class="keyword">var</span> seed = monster.id;
+  <span class="comment">// grab the monster name, as it is more flavor</span>
+  <span class="keyword">var</span> name = monster.name
+
+  <span class="comment">// iterate over each character in the name, adding</span>
+  <span class="comment">// its value to our seed</span>
+  <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>, l = name.length; i &lt; l; i++) {
+    seed += name.charCodeAt(i);
+  }
+
+  <span class="keyword">return</span> seed;
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">getMonsterEyeColorSeed</span><span class="params">(monster)</span> {</span>
+  <span class="comment">// start with the base monster seed (an integer)</span>
+  <span class="keyword">var</span> eyeColorSeed = getMonsterSeed(monster);
+
+  <span class="comment">// boil down our seed by some fraction until it is a decimal</span>
+  <span class="comment">// it is important that all methods generating a sub-seed do</span>
+  <span class="comment">// so in a fashion that does not collide with others</span>
+  <span class="keyword">while</span> (eyeColorSeed &gt; <span class="number">1</span>) {
+    eyeColorSeed /= <span class="number">3</span>;
+  }
+
+  <span class="keyword">return</span> eyeColorSeed;
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">getMonsterEyeColor</span><span class="params">(monster)</span> {</span>
+  <span class="comment">// here are the available eye colors</span>
+  <span class="keyword">var</span> eyeColors = [
+    <span class="string">'334F53'</span>,
+    <span class="string">'<span class="caps">C8C9C9</span>'</span>,
+    <span class="string">'574840'</span>,
+    <span class="string">'5F6401'</span>,
+    <span class="string">'<span class="caps">C5DAED</span>'</span>
+  ];
+
+  <span class="comment">// let's get the eye color seed for this monster</span>
+  <span class="keyword">var</span> eyeColorSeed = getMonsterEyeColorSeed(monster);
+
+  <span class="comment">// ah ha! now we use the eye color seed to grab a color</span>
+  <span class="comment">// out of our array</span>
+  <span class="keyword">var</span> eyeColorIndex = getRandomInt(<span class="number">1</span>, eyeColors.length,
+    eyeColorSeed) - <span class="number">1</span>;
+
+  <span class="comment">// pound it out</span>
+  <span class="keyword">return</span> <span class="string">'#'</span> + eyeColors[eyeColorIndex];
+}
+</code></pre>
+<p>And how might we use&nbsp;this?</p>
+<pre><code class="lang-javascript"><span class="comment">// what a vile creature that Kevin is...</span>
+<span class="keyword">var</span> monster = { id: <span class="number">1</span>, name: <span class="string">'Kevin'</span> };
+<span class="keyword">var</span> monsterEyeColor = getMonsterEyeColor(monster);
+console.log(monsterEyeColor); <span class="comment">// #574840</span>
+</code></pre>
+<p>Proof that it is psuedo-random,&nbsp;dynamic?</p>
+<pre><code class="lang-javascript"><span class="comment">// <span class="caps">STELLLLLLAAAAAAAAAAAAAAAAAAAAAAAAA</span>...</span>
+<span class="keyword">var</span> monster = { id: <span class="number">2</span>, name: <span class="string">'Stella'</span> };
+<span class="keyword">var</span> monsterEyeColor = getMonsterEyeColor(monster);
+console.log(monsterEyeColor); <span class="comment">// #5F6401</span>
+</code></pre>
+<p>This is how <a href="http://monsters.io">World of Monsters</a> at present generates <a href="https://dl.dropboxusercontent.com/u/37456399/monster.png">random monster renderings</a>
+that never differ, and are always the same for each monster. The body, and eye color
+are driven by the technique laid out above. We might use this approach to determine
+if monsters have horns and how many of them, whether they have hair and what color,
+and perhaps even subtle information about appendages (flippers, tentacles,
+arms, etc.). Who&nbsp;knows!</p>
+</section>
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
+            (function () {
+              var disqus_shortname = 'birdducksoftware';
+              (function() {
+                  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+              })();
+            }());
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« The rest</a></div>
+        <section class="about">
+        </section>
+        <section class="copy">
+          <p>&copy; 2014 Bird Duck Software &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-48299345-1', 'birdducksoftware.com');
+      ga('send', 'pageview');
+      
+    </script>
+  </body>
+</html>
