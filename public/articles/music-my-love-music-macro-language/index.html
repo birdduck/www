@@ -132,24 +132,23 @@ mml1 += <span class="string">"f2. c0e0a0&lt;c2.&gt; d0f0a0&lt;d2."</span>;
     <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/rest</span>)</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span> <span class="attribute">:a</span>)</span>
     <span class="list">(<span class="title">mml/measure</span> <span class="attribute">:g</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:c</span>)</span>)</span>
     <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/desc</span> <span class="attribute">:b</span>)</span> <span class="list">(<span class="title">mml/asc</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:c</span>)</span>)</span> <span class="attribute">:d</span>)</span>
-    <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/duration</span><span class="number"> 3</span> <span class="list">(<span class="title">mml/desc</span> <span class="attribute">:a</span>)</span>)</span>)</span>)</span>)</span>
+    <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/dot</span> <span class="list">(<span class="title">mml/half</span> <span class="list">(<span class="title">mml/desc</span> <span class="attribute">:a</span>)</span>)</span>)</span>)</span>)</span>)</span>
 
 <span class="list">(<span class="title"><span class="built_in">def</span></span> gymnopédie
   <span class="list">(<span class="title">mml/mml</span>
     <span class="list">(<span class="title">mml/tempo</span><span class="number"> 60</span>)</span> <span class="list">(<span class="title">mml/volume</span><span class="number"> 14</span>)</span> <span class="list">(<span class="title">mml/octave</span><span class="number"> 6</span>)</span>
     melody
-    <span class="list">(<span class="title"><span class="built_in">apply</span></span> mml/mml
-      <span class="list">(<span class="title"><span class="built_in">for</span></span> <span class="collection">[m <span class="list">(<span class="title"><span class="built_in">range</span></span><span class="number"> 4</span>)</span>]</span>
-        <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/duration</span><span class="number"> 3</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span>)</span>)</span>)</span>)</span>
+    <span class="list">(<span class="title">mml/repeat</span><span class="number"> 4</span>
+      <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/dot</span> <span class="list">(<span class="title">mml/half</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span>)</span>)</span>)</span>)</span>
     <span class="list">(<span class="title">mml/asc</span> melody)</span>)</span>)</span>
 </code></pre>
 <p>…which now serializes&nbsp;as…</p>
 <pre><code class="lang-clojure"><span class="list">(<span class="title">println</span> gymnopédie)</span>
 <span class="comment">; <span class="caps">NOTE</span>: line breaks added for clarity</span>
 <span class="comment">; t60 v14 o6</span>
-<span class="comment">; r f+ a g f+ c+ &gt;b &lt;c+ d &gt;a3</span>
-<span class="comment">; f+3 f+3 f+3 f+3</span>
-<span class="comment">; &lt;r f+ a g f+ c+ &gt;b &lt;c+ d &gt;a3</span>
+<span class="comment">; r f+ a g f+ c+ &gt;b &lt;c+ d &gt;a2.</span>
+<span class="comment">; [f+2.]4</span>
+<span class="comment">; &lt;r f+ a g f+ c+ &gt;b &lt;c+ d &gt;a2.</span>
 </code></pre>
 <p>Maybe it is not the greatest example, but hopefully you get the picture! <a href="https://clojars.org/com.birdduck/mml">Download the library from Clojars</a> to start making music of your own in&nbsp;ClojureScript.</p>
 </section>

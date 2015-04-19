@@ -147,15 +147,14 @@ rf+a gf+c+ >b<c+d >a2. f+2.& f+2.& f+2.& f+2.< rf+a gf+c+ >b<c+d >a2.
     (mml/measure (mml/rest) (mml/sharp :f) :a)
     (mml/measure :g (mml/sharp :f) (mml/sharp :c))
     (mml/measure (mml/desc :b) (mml/asc (mml/sharp :c)) :d)
-    (mml/measure (mml/duration 3 (mml/desc :a)))))
+    (mml/measure (mml/dot (mml/half (mml/desc :a))))))
 
 (def gymnopédie
   (mml/mml
     (mml/tempo 60) (mml/volume 14) (mml/octave 6)
     melody
-    (apply mml/mml
-      (for [m (range 4)]
-        (mml/measure (mml/duration 3 (mml/sharp :f)))))
+    (mml/repeat 4
+      (mml/measure (mml/dot (mml/half (mml/sharp :f)))))
     (mml/asc melody)))
 ```
 
@@ -165,9 +164,9 @@ rf+a gf+c+ >b<c+d >a2. f+2.& f+2.& f+2.& f+2.< rf+a gf+c+ >b<c+d >a2.
 (println gymnopédie)
 ; NOTE: line breaks added for clarity
 ; t60 v14 o6
-; r f+ a g f+ c+ >b <c+ d >a3
-; f+3 f+3 f+3 f+3
-; <r f+ a g f+ c+ >b <c+ d >a3
+; r f+ a g f+ c+ >b <c+ d >a2.
+; [f+2.]4
+; <r f+ a g f+ c+ >b <c+ d >a2.
 ```
 
 Maybe it is not the greatest example, but hopefully you get the picture! [Download the library from Clojars][10] to start making music of your own in ClojureScript.
