@@ -1,2 +1,3 @@
-var app = require('./lib');
-require('http').createServer(app('./public', { gzip: true })).listen(process.env.PORT || 5000);
+'use strict';
+
+require('http').createServer(require('./lib')).listen(process.env.PORT || 5000);
