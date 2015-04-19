@@ -4,8 +4,9 @@ h1, h2, h3, h4, h5, h6, p, body, a, img, ul, ol, blockquote, pre {
 }
 
 body {
-  font-family: 'Lora', serif;
+  font-family: 'Roboto', serif;
   font-size: 21px;
+  font-weight: 300;
   line-height: 1.52;
   background-color: #f8f8f8;
   text-rendering: optimizeLegibility;
@@ -21,7 +22,8 @@ body, a {
 }
 
 a:hover {
-  color: #ff8000;
+  /*color: #ff8000;*/
+  color: #836882;
   text-decoration: underline;
 }
 
@@ -37,6 +39,10 @@ pre {
   border-radius: 0.25em;
   margin-bottom: 1.8em;
   padding: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-transform: uppercase;
 }
 
 h1 {
@@ -84,23 +90,33 @@ hr {
 /* page header */
 
 .header {
-  margin: 3em 0 5em;
+  background-image: url(http://imgstocks.com/wp-content/uploads/2013/12/Outer-space-wallpaper-41243.jpg);
+  color: #836882;
+  margin-top: 0;
+  padding: 6em 0 3em;
 }
 
 .header h1 {
+  color: #f8f8f8;
   font-size: 2.6em;
   text-align: center;
   font-weight: 700;
   margin: 0;
 }
 
+.header :not(h1) > a, .header h1 > a:hover {
+  color: #836882;
+}
+
+.header :not(h1) > a:hover, .header h1 > a {
+  color: #f8f8f8;
+}
+
 .header a, .header a:hover {
   text-decoration: none;
-  color: #171717;
 }
 
 .header .author {
-  font-family: 'Merriweather', serif;
   font-variant: small-caps;
   text-transform: lowercase;
   text-rendering: auto;
@@ -129,6 +145,10 @@ body.article-detail > header h1 {
 
 body.article-detail > header {
   margin-bottom: 3em;
+}
+
+body.article-detail > header a {
+  color: #836882;
 }
 
 /* page footer */
@@ -223,7 +243,6 @@ footer .copy, footer .copy a {
 }
 
 .more, .date {
-  font-family: 'Merriweather', serif;
   font-variant: small-caps;
   text-transform: lowercase;
   font-weight: 400;
@@ -269,7 +288,6 @@ footer .copy, footer .copy a {
 .archive .year-label,
 .archive .month-label{
   width: 4em;
-  font-family: 'Merriweather', serif;
   font-variant: small-caps;
   text-transform: lowercase;
   font-weight: 400;
@@ -294,7 +312,7 @@ footer .copy, footer .copy a {
 /* code styling */
 
 code {
-  font-family: 'Anonymous Pro', monospace;
+  font-family: 'Inconsolata', monospace;
   font-size: 0.85em;
   color: #000;
 }
