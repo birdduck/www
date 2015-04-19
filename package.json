@@ -16,9 +16,7 @@
     "express": "4.12.3",
     "moment": "2.10.2",
     "typogr": "0.6.5",
-    "underscore": "1.8.3"
-  },
-  "devDependencies": {
+    "underscore": "1.8.3",
     "wintersmith": "2.1.0"
   },
   "engines": {
