@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "cd blog && wintersmith build",
-    "preinstall": "npm run-script build"
+    "postinstall": "npm run-script build"
   },
   "repository": {
     "type": "git",
