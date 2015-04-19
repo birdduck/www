@@ -5,9 +5,148 @@
     <atom:link href="http://birdducksoftware.com/feed.xml" rel="self" type="application/rss+xml"></atom:link>
     <link>http://birdducksoftware.com</link>
     <description>We make it good.</description>
-    <pubDate>Tue, 30 Sep 2014 11:15:00 +0000</pubDate>
+    <pubDate>Sat, 18 Apr 2015 21:00:00 +0000</pubDate>
     <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
     <language>en</language>
+    <item>
+      <title>Music My Love, Music Macro Language</title>
+      <link>http://birdducksoftware.com/articles/music-my-love-music-macro-language/</link>
+      <pubDate>Sat, 18 Apr 2015 21:00:00 +0000</pubDate>
+      <guid isPermaLink="true">http://birdducksoftware.com/articles/music-my-love-music-macro-language/</guid>
+      <author></author>
+      <description>&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Music_Macro_Language&quot;&gt;MML&lt;/a&gt; is a descriptive syntax for sequencing music. It can be played in the browser with WebAudio libraries (like the incredible &lt;a href=&quot;http://mohayonao.github.io/timbre.js/mml.html&quot;&gt;timbre.js&lt;/a&gt;) making it attractive for writing chiptune-esque scores for unreleased indie games. However, writing and reading MML is an irksome, error prone task, especially when trying to work in tandem with another programming language.&lt;/p&gt;
+&lt;h2 id=&quot;is-it-really-so-bad-&quot;&gt;Is it really so bad?&lt;/h2&gt;
+&lt;p&gt;Let’s take a look at one of the examples from &lt;a href=&quot;http://mohayonao.github.io/timbre.js&quot;&gt;timbre.js&lt;/a&gt;. It is &lt;a href=&quot;http://mohayonao.github.io/timbre.js/satie.html&quot;&gt;a beautiful digital rendition&lt;/a&gt; of Erik Satie’s &lt;a href=&quot;https://www.youtube.com/watch?v=S-Xm7s9eGxU&quot;&gt;&lt;em&gt;Gymnopédie No. 1&lt;/em&gt;&lt;/a&gt; from &lt;a href=&quot;http://en.wikipedia.org/wiki/Gymnop%C3%A9dies&quot;&gt;&lt;em&gt;Gymopédies&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; mml0, mml1;
+&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; env   = T(&lt;span class=&quot;string&quot;&gt;&quot;adsr&quot;&lt;/span&gt;, {d:&lt;span class=&quot;number&quot;&gt;3000&lt;/span&gt;, s:&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;, r:&lt;span class=&quot;number&quot;&gt;600&lt;/span&gt;});
+&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; synth = T(&lt;span class=&quot;string&quot;&gt;&quot;SynthDef&quot;&lt;/span&gt;, {mul:&lt;span class=&quot;number&quot;&gt;0.45&lt;/span&gt;, poly:&lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;});
+
+synth.def = &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(opts)&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; op1 = T(&lt;span class=&quot;string&quot;&gt;&quot;sin&quot;&lt;/span&gt;, {freq:opts.freq*&lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;, fb:&lt;span class=&quot;number&quot;&gt;0.25&lt;/span&gt;, mul:&lt;span class=&quot;number&quot;&gt;0.4&lt;/span&gt;});
+  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; op2 = T(&lt;span class=&quot;string&quot;&gt;&quot;sin&quot;&lt;/span&gt;, {freq:opts.freq, phase:op1, mul:opts.velocity/&lt;span class=&quot;number&quot;&gt;128&lt;/span&gt;});
+  &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; env.clone().append(op2).on(&lt;span class=&quot;string&quot;&gt;&quot;ended&quot;&lt;/span&gt;, opts.doneAction).bang();
+};
+
+&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; master = synth;
+&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; mod    = T(&lt;span class=&quot;string&quot;&gt;&quot;sin&quot;&lt;/span&gt;, {freq:&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, add:&lt;span class=&quot;number&quot;&gt;3200&lt;/span&gt;, mul:&lt;span class=&quot;number&quot;&gt;800&lt;/span&gt;, kr:&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;});
+master = T(&lt;span class=&quot;string&quot;&gt;&quot;eq&quot;&lt;/span&gt;, {params:{lf:[&lt;span class=&quot;number&quot;&gt;800&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;, -&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;], mf:[&lt;span class=&quot;number&quot;&gt;6400&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;]}}, master);
+master = T(&lt;span class=&quot;string&quot;&gt;&quot;phaser&quot;&lt;/span&gt;, {freq:mod, Q:&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;, steps:&lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;}, master);
+master = T(&lt;span class=&quot;string&quot;&gt;&quot;delay&quot;&lt;/span&gt;, {time:&lt;span class=&quot;string&quot;&gt;&quot;BPM60 L16&quot;&lt;/span&gt;, fb:&lt;span class=&quot;number&quot;&gt;0.65&lt;/span&gt;, mix:&lt;span class=&quot;number&quot;&gt;0.25&lt;/span&gt;}, master);
+
+mml0 = &lt;span class=&quot;string&quot;&gt;&quot;t60 l4 v6 q2 o3&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;[ [g &amp;lt; b0&amp;lt;d0f+2&amp;gt;&amp;gt; d &amp;lt;a0&amp;lt;c+0f+2&amp;gt;&amp;gt;]8 &quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;f+ &amp;lt;a0&amp;lt;c+0f+2&amp;gt;&amp;gt;&amp;gt; b&amp;lt;&amp;lt;b0&amp;lt;d0f+2&amp;gt;&amp;gt; e&amp;lt;g0b2&amp;gt; e&amp;lt;b0&amp;lt;d0g2&amp;gt;&amp;gt; d&amp;lt;f0a0&amp;lt;d2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;&amp;gt;a&amp;lt;&amp;lt;a0&amp;lt;c0e2&amp;gt;&amp;gt; d&amp;lt;g0b0&amp;lt;e2&amp;gt;&amp;gt; d&amp;lt;d0g0b0&amp;lt;e2&amp;gt;&amp;gt; d&amp;lt;c0e0a0&amp;lt;d2&amp;gt;&amp;gt; d&amp;lt;c0f+0a0&amp;lt;d2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;d&amp;lt;a0&amp;lt;c0f2&amp;gt;&amp;gt; d&amp;lt;a0&amp;lt;c0e2&amp;gt;&amp;gt; d&amp;lt;d0g0b0&amp;lt;e2&amp;gt;&amp;gt; d&amp;lt;c0e0a0&amp;lt;d2&amp;gt;&amp;gt; d&amp;lt;c0f+0a0&amp;lt;d2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;| e&amp;lt;b0&amp;lt;e0g2&amp;gt;&amp;gt; f+&amp;lt;a0&amp;lt;c+0f+2&amp;gt;&amp;gt;&amp;gt; b&amp;lt;&amp;lt;b0&amp;lt;d0f+2&amp;gt;&amp;gt; e&amp;lt;&amp;lt;c+0e0a2&amp;gt;&amp;gt; e&amp;lt;a0&amp;lt;c+0f+0a2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;eb0&amp;lt;a0&amp;lt;d&amp;gt;e0b0&amp;lt;d0g&amp;gt;&amp;gt; a0&amp;lt;g2.&amp;gt; d0a0&amp;lt;d2.&amp;gt; ]&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;e&amp;lt;b0&amp;lt;e0g2&amp;gt;&amp;gt; e&amp;lt;a0&amp;lt;d0f0a2&amp;gt;&amp;gt; e&amp;lt;a0&amp;lt;c0f2&amp;gt;&amp;gt; e&amp;lt;&amp;lt;c0e0a2&amp;gt;&amp;gt; e&amp;lt;a0&amp;lt;c0f0a2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;eb0&amp;lt;a0&amp;lt;d&amp;gt;e0b0&amp;lt;d0g&amp;gt;&amp;gt; a0&amp;lt;g2.&amp;gt; d0a0&amp;lt;d2.&amp;gt;&quot;&lt;/span&gt;;
+
+mml1 = &lt;span class=&quot;string&quot;&gt;&quot;t60 v14 l4 o6&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;[ r2. r2. r2. r2.&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;rf+a gf+c+ &amp;gt;b&amp;lt;c+d &amp;gt;a2. f+2.&amp;amp; f+2.&amp;amp; f+2.&amp;amp; f+2.&amp;lt; rf+a gf+c+ &amp;gt;b&amp;lt;c+d &amp;gt;a2.&amp;lt;&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;c+2. f+2. &amp;gt;e2.&amp;amp;e2.&amp;amp;e2.&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;ab&amp;lt;c ed&amp;gt;b&amp;lt; dc&amp;gt;b&amp;lt; d2.&amp;amp; d2d&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;efg acd ed&amp;gt;b &amp;lt;d2.&amp;amp; d2d&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;| g2. f+2.&amp;gt; bab&amp;lt; c+de c+de&amp;gt;&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;f+2. c0e0a0&amp;lt;c2.&amp;gt; d0f+0a0&amp;lt;d2. ]&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;g2. f2.&amp;gt; b&amp;lt;cf edc edc&amp;gt;&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;f2. c0e0a0&amp;lt;c2.&amp;gt; d0f0a0&amp;lt;d2.&quot;&lt;/span&gt;;
+
+T(&lt;span class=&quot;string&quot;&gt;&quot;mml&quot;&lt;/span&gt;, {mml:[mml0, mml1]}, synth).on(&lt;span class=&quot;string&quot;&gt;&quot;ended&quot;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt; {&lt;/span&gt;
+  &lt;span class=&quot;keyword&quot;&gt;this&lt;/span&gt;.stop();
+}).set({buddies:master}).start();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The musical output is sublime, but what is going on here? If we squint things start to look like &lt;a href=&quot;http://en.wikipedia.org/wiki/Brainfuck&quot;&gt;Brainfuck&lt;/a&gt;. I’ll be the first to admit that the deck is stacked. This is a loaded example as it leverages many of the fancy features from &lt;a href=&quot;http://mohayonao.github.io/timbre.js&quot;&gt;timbre.js&lt;/a&gt; that have nothing to do with MML. Let’s make things a bit more fair, and focus on the the most important bit: the music.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-javascript&quot;&gt;mml0 = &lt;span class=&quot;string&quot;&gt;&quot;t60 l4 v6 q2 o3&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;[ [g &amp;lt; b0&amp;lt;d0f+2&amp;gt;&amp;gt; d &amp;lt;a0&amp;lt;c+0f+2&amp;gt;&amp;gt;]8 &quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;f+ &amp;lt;a0&amp;lt;c+0f+2&amp;gt;&amp;gt;&amp;gt; b&amp;lt;&amp;lt;b0&amp;lt;d0f+2&amp;gt;&amp;gt; e&amp;lt;g0b2&amp;gt; e&amp;lt;b0&amp;lt;d0g2&amp;gt;&amp;gt; d&amp;lt;f0a0&amp;lt;d2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;&amp;gt;a&amp;lt;&amp;lt;a0&amp;lt;c0e2&amp;gt;&amp;gt; d&amp;lt;g0b0&amp;lt;e2&amp;gt;&amp;gt; d&amp;lt;d0g0b0&amp;lt;e2&amp;gt;&amp;gt; d&amp;lt;c0e0a0&amp;lt;d2&amp;gt;&amp;gt; d&amp;lt;c0f+0a0&amp;lt;d2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;d&amp;lt;a0&amp;lt;c0f2&amp;gt;&amp;gt; d&amp;lt;a0&amp;lt;c0e2&amp;gt;&amp;gt; d&amp;lt;d0g0b0&amp;lt;e2&amp;gt;&amp;gt; d&amp;lt;c0e0a0&amp;lt;d2&amp;gt;&amp;gt; d&amp;lt;c0f+0a0&amp;lt;d2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;| e&amp;lt;b0&amp;lt;e0g2&amp;gt;&amp;gt; f+&amp;lt;a0&amp;lt;c+0f+2&amp;gt;&amp;gt;&amp;gt; b&amp;lt;&amp;lt;b0&amp;lt;d0f+2&amp;gt;&amp;gt; e&amp;lt;&amp;lt;c+0e0a2&amp;gt;&amp;gt; e&amp;lt;a0&amp;lt;c+0f+0a2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;eb0&amp;lt;a0&amp;lt;d&amp;gt;e0b0&amp;lt;d0g&amp;gt;&amp;gt; a0&amp;lt;g2.&amp;gt; d0a0&amp;lt;d2.&amp;gt; ]&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;e&amp;lt;b0&amp;lt;e0g2&amp;gt;&amp;gt; e&amp;lt;a0&amp;lt;d0f0a2&amp;gt;&amp;gt; e&amp;lt;a0&amp;lt;c0f2&amp;gt;&amp;gt; e&amp;lt;&amp;lt;c0e0a2&amp;gt;&amp;gt; e&amp;lt;a0&amp;lt;c0f0a2&amp;gt;&amp;gt;&quot;&lt;/span&gt;;
+mml0 += &lt;span class=&quot;string&quot;&gt;&quot;eb0&amp;lt;a0&amp;lt;d&amp;gt;e0b0&amp;lt;d0g&amp;gt;&amp;gt; a0&amp;lt;g2.&amp;gt; d0a0&amp;lt;d2.&amp;gt;&quot;&lt;/span&gt;;
+
+mml1 = &lt;span class=&quot;string&quot;&gt;&quot;t60 v14 l4 o6&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;[ r2. r2. r2. r2.&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;rf+a gf+c+ &amp;gt;b&amp;lt;c+d &amp;gt;a2. f+2.&amp;amp; f+2.&amp;amp; f+2.&amp;amp; f+2.&amp;lt; rf+a gf+c+ &amp;gt;b&amp;lt;c+d &amp;gt;a2.&amp;lt;&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;c+2. f+2. &amp;gt;e2.&amp;amp;e2.&amp;amp;e2.&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;ab&amp;lt;c ed&amp;gt;b&amp;lt; dc&amp;gt;b&amp;lt; d2.&amp;amp; d2d&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;efg acd ed&amp;gt;b &amp;lt;d2.&amp;amp; d2d&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;| g2. f+2.&amp;gt; bab&amp;lt; c+de c+de&amp;gt;&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;f+2. c0e0a0&amp;lt;c2.&amp;gt; d0f+0a0&amp;lt;d2. ]&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;g2. f2.&amp;gt; b&amp;lt;cf edc edc&amp;gt;&quot;&lt;/span&gt;;
+mml1 += &lt;span class=&quot;string&quot;&gt;&quot;f2. c0e0a0&amp;lt;c2.&amp;gt; d0f0a0&amp;lt;d2.&quot;&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Even with blinders attached the world didn’t get any less terrifying. It is hard to imagine that even an expert could understand what is being described here without serious concentration. Part of the problem is how much noise JavaScript is making (with string concatenation, and general syntax). It is important to recognize that there is absolutely nothing wrong with this code, or its author; however, we need to keep in mind that to the novice, even one familiar with music and common music notation, it is enough to make the eyes glaze over.&lt;/p&gt;
+&lt;h2 id=&quot;we-can-do-better&quot;&gt;We can do better&lt;/h2&gt;
+&lt;p&gt;What if we could write these concepts (tempo, volume, instrument octave, notes, pitch, duration, and more) in code that will serialize to the appropriate MML representation? With the help of ClojureScript, and &lt;a href=&quot;https://github.com/birdduck/mml&quot;&gt;this handy library&lt;/a&gt;, we can.&lt;/p&gt;
+&lt;p&gt;This portion of the hand written melody MML…&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-mml&quot;&gt;rf+a gf+c+ &amp;gt;b&amp;lt;c+d &amp;gt;a2.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…can be represented with our ClojureScript library as…&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;ns&lt;/span&gt;&lt;/span&gt; gymnopédie.core
+  &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;attribute&quot;&gt;:require&lt;/span&gt; mml.core &lt;span class=&quot;attribute&quot;&gt;:as&lt;/span&gt; mml)&lt;/span&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;def&lt;/span&gt;&lt;/span&gt; melody
+  &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/mml&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/tempo&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 60&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/volume&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 14&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/octave&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 6&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/measure&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/rest&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:f&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:a&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/measure&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:g&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:f&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:c&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/measure&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/desc&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:b&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/asc&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:c&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:d&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/measure&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/duration&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 3&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/desc&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:a&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: It is important to understand that the &lt;code&gt;measure&lt;/code&gt; function is for convenience and semantics. The following definition is equivalent to the previous.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;def&lt;/span&gt;&lt;/span&gt; melody
+  &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/mml&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/tempo&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 60&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/volume&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 14&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/octave&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 6&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/rest&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:f&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:a&lt;/span&gt;
+    &lt;span class=&quot;attribute&quot;&gt;:g&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:f&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:c&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/desc&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:b&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/asc&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:c&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:d&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/duration&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 3&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/desc&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:a&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…which would serialize as…&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;println&lt;/span&gt; melody)&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;; t60 v14 o6 r f+ a g f+ c+ &amp;gt;b &amp;lt;c+ d &amp;gt;a3&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The inevitable question after seeing a 22 character string of MML turned into a variable definition spanning seven lines of ClojureScript is likely: what was the point of this exercise? What did we gain? How did this library help &lt;strong&gt;me&lt;/strong&gt;?&lt;/p&gt;
+&lt;p&gt;Well, we’ve successfully hidden the symbols behind more human friendly equivalents, and though we may have to write more characters we can focus on music concepts rather than additional syntax. But perhaps the most compelling reason to use this abstraction is the ability to share, and compose blocks of MML. What does this mean, exactly?&lt;/p&gt;
+&lt;p&gt;If you were looking closely at the MML, or are familiar with &lt;a href=&quot;http://www.music-scores.com/graphics/sa_gy_1_pi.gif&quot;&gt;the sheet music&lt;/a&gt;, you know that our melody repeats. We can do some very slight refactoring to leverage our new found power bestowed upon us by the alien technology.&lt;/p&gt;
+&lt;p&gt;We can turn this big long thing (with duplicate phrasing mind you)…&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-mml&quot;&gt;rf+a gf+c+ &amp;gt;b&amp;lt;c+d &amp;gt;a2. f+2.&amp;amp; f+2.&amp;amp; f+2.&amp;amp; f+2.&amp;lt; rf+a gf+c+ &amp;gt;b&amp;lt;c+d &amp;gt;a2.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;..into this refactored ClojureScript…&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;ns&lt;/span&gt;&lt;/span&gt; gymnopédie.core
+  &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;attribute&quot;&gt;:require&lt;/span&gt; mml.core &lt;span class=&quot;attribute&quot;&gt;:as&lt;/span&gt; mml)&lt;/span&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;def&lt;/span&gt;&lt;/span&gt; melody
+  &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/mml&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/measure&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/rest&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:f&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:a&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/measure&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:g&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:f&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:c&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/measure&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/desc&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:b&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/asc&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:c&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:d&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/measure&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/duration&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 3&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/desc&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:a&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;def&lt;/span&gt;&lt;/span&gt; gymnopédie
+  &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/mml&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/tempo&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 60&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/volume&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 14&lt;/span&gt;)&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/octave&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 6&lt;/span&gt;)&lt;/span&gt;
+    melody
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;apply&lt;/span&gt;&lt;/span&gt; mml/mml
+      &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;for&lt;/span&gt;&lt;/span&gt; &lt;span class=&quot;collection&quot;&gt;[m &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;&lt;span class=&quot;built_in&quot;&gt;range&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 4&lt;/span&gt;)&lt;/span&gt;]&lt;/span&gt;
+        &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/measure&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/duration&lt;/span&gt;&lt;span class=&quot;number&quot;&gt; 3&lt;/span&gt; &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/sharp&lt;/span&gt; &lt;span class=&quot;attribute&quot;&gt;:f&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
+    &lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;mml/asc&lt;/span&gt; melody)&lt;/span&gt;)&lt;/span&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…which now serializes as…&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-clojure&quot;&gt;&lt;span class=&quot;list&quot;&gt;(&lt;span class=&quot;title&quot;&gt;println&lt;/span&gt; gymnopédie)&lt;/span&gt;
+&lt;span class=&quot;comment&quot;&gt;; NOTE: line breaks added for clarity&lt;/span&gt;
+&lt;span class=&quot;comment&quot;&gt;; t60 v14 o6&lt;/span&gt;
+&lt;span class=&quot;comment&quot;&gt;; r f+ a g f+ c+ &amp;gt;b &amp;lt;c+ d &amp;gt;a3&lt;/span&gt;
+&lt;span class=&quot;comment&quot;&gt;; f+3 f+3 f+3 f+3&lt;/span&gt;
+&lt;span class=&quot;comment&quot;&gt;; &amp;lt;r f+ a g f+ c+ &amp;gt;b &amp;lt;c+ d &amp;gt;a3&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Maybe it is not the greatest example, but hopefully you get the picture! &lt;a href=&quot;https://clojars.org/com.birdduck/mml&quot;&gt;Download the library from Clojars&lt;/a&gt; to start making music of your own in ClojureScript.&lt;/p&gt;
+</description>
+    </item>
     <item>
       <title>Random Avatars, Approximately</title>
       <link>http://birdducksoftware.com/articles/random-avatars-approximately/</link>

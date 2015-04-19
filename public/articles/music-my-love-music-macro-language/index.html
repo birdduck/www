@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Music My Love, Music Macro Language - Bird Duck Software
+    </title>
+    <link rel="alternate" href="http://birdducksoftware.com/feed.xml" type="application/rss+xml" title="We make it good.">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Music My Love, Music Macro Language</h1>
+        <p class="author">Written by <span itemscope itemtype="http://data-vocabulary.org/Person" class="author"><a href="mailto:the30yearswar@hotmail.com"><span itemprop="name">Colin Teal</span></a><span itemprop="title">Software Engineer</span><span itemprop="affiliation">Rival IQ</span></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p><a href="http://en.wikipedia.org/wiki/Music_Macro_Language"><span class="caps">MML</span></a> is a descriptive syntax for sequencing music. It can be played in the browser with WebAudio libraries (like the incredible <a href="http://mohayonao.github.io/timbre.js/mml.html">timbre.js</a>) making it attractive for writing chiptune-esque scores for unreleased indie games. However, writing and reading <span class="caps">MML</span> is an irksome, error prone task, especially when trying to work in tandem with another programming&nbsp;language.</p>
+<h2 id="is-it-really-so-bad-">Is it really so&nbsp;bad?</h2>
+<p>Let’s take a look at one of the examples from <a href="http://mohayonao.github.io/timbre.js">timbre.js</a>. It is <a href="http://mohayonao.github.io/timbre.js/satie.html">a beautiful digital rendition</a> of Erik Satie’s <a href="https://www.youtube.com/watch?v=S-Xm7s9eGxU"><em>Gymnopédie No. 1</em></a> from <a href="http://en.wikipedia.org/wiki/Gymnop%C3%A9dies"><em>Gymopédies</em></a>.</p>
+<pre><code class="lang-javascript"><span class="keyword">var</span> mml0, mml1;
+<span class="keyword">var</span> env   = T(<span class="string">"adsr"</span>, {d:<span class="number">3000</span>, s:<span class="number">0</span>, r:<span class="number">600</span>});
+<span class="keyword">var</span> synth = T(<span class="string">"SynthDef"</span>, {mul:<span class="number">0.45</span>, poly:<span class="number">8</span>});
+
+synth.def = <span class="function"><span class="keyword">function</span><span class="params">(opts)</span> {</span>
+  <span class="keyword">var</span> op1 = T(<span class="string">"sin"</span>, {freq:opts.freq*<span class="number">6</span>, fb:<span class="number">0.25</span>, mul:<span class="number">0.4</span>});
+  <span class="keyword">var</span> op2 = T(<span class="string">"sin"</span>, {freq:opts.freq, phase:op1, mul:opts.velocity/<span class="number">128</span>});
+  <span class="keyword">return</span> env.clone().append(op2).on(<span class="string">"ended"</span>, opts.doneAction).bang();
+};
+
+<span class="keyword">var</span> master = synth;
+<span class="keyword">var</span> mod    = T(<span class="string">"sin"</span>, {freq:<span class="number">2</span>, add:<span class="number">3200</span>, mul:<span class="number">800</span>, kr:<span class="number">1</span>});
+master = T(<span class="string">"eq"</span>, {params:{lf:[<span class="number">800</span>, <span class="number">0.5</span>, -<span class="number">2</span>], mf:[<span class="number">6400</span>, <span class="number">0.5</span>, <span class="number">4</span>]}}, master);
+master = T(<span class="string">"phaser"</span>, {freq:mod, Q:<span class="number">2</span>, steps:<span class="number">4</span>}, master);
+master = T(<span class="string">"delay"</span>, {time:<span class="string">"<span class="caps">BPM60</span> L16"</span>, fb:<span class="number">0.65</span>, mix:<span class="number">0.25</span>}, master);
+
+mml0 = <span class="string">"t60 l4 v6 q2 o3"</span>;
+mml0 += <span class="string">"[ [g &lt; b0&lt;d0f+2&gt;&gt; d &lt;a0&lt;c+0f+2&gt;&gt;]8 "</span>;
+mml0 += <span class="string">"f+ &lt;a0&lt;c+0f+2&gt;&gt;&gt; b&lt;&lt;b0&lt;d0f+2&gt;&gt; e&lt;g0b2&gt; e&lt;b0&lt;d0g2&gt;&gt; d&lt;f0a0&lt;d2&gt;&gt;"</span>;
+mml0 += <span class="string">"&gt;a&lt;&lt;a0&lt;c0e2&gt;&gt; d&lt;g0b0&lt;e2&gt;&gt; d&lt;d0g0b0&lt;e2&gt;&gt; d&lt;c0e0a0&lt;d2&gt;&gt; d&lt;c0f+0a0&lt;d2&gt;&gt;"</span>;
+mml0 += <span class="string">"d&lt;a0&lt;c0f2&gt;&gt; d&lt;a0&lt;c0e2&gt;&gt; d&lt;d0g0b0&lt;e2&gt;&gt; d&lt;c0e0a0&lt;d2&gt;&gt; d&lt;c0f+0a0&lt;d2&gt;&gt;"</span>;
+mml0 += <span class="string">"| e&lt;b0&lt;e0g2&gt;&gt; f+&lt;a0&lt;c+0f+2&gt;&gt;&gt; b&lt;&lt;b0&lt;d0f+2&gt;&gt; e&lt;&lt;c+0e0a2&gt;&gt; e&lt;a0&lt;c+0f+0a2&gt;&gt;"</span>;
+mml0 += <span class="string">"eb0&lt;a0&lt;d&gt;e0b0&lt;d0g&gt;&gt; a0&lt;g2.&gt; d0a0&lt;d2.&gt; ]"</span>;
+mml0 += <span class="string">"e&lt;b0&lt;e0g2&gt;&gt; e&lt;a0&lt;d0f0a2&gt;&gt; e&lt;a0&lt;c0f2&gt;&gt; e&lt;&lt;c0e0a2&gt;&gt; e&lt;a0&lt;c0f0a2&gt;&gt;"</span>;
+mml0 += <span class="string">"eb0&lt;a0&lt;d&gt;e0b0&lt;d0g&gt;&gt; a0&lt;g2.&gt; d0a0&lt;d2.&gt;"</span>;
+
+mml1 = <span class="string">"t60 v14 l4 o6"</span>;
+mml1 += <span class="string">"[ r2. r2. r2. r2."</span>;
+mml1 += <span class="string">"rf+a gf+c+ &gt;b&lt;c+d &gt;a2. f+2.&amp; f+2.&amp; f+2.&amp; f+2.&lt; rf+a gf+c+ &gt;b&lt;c+d &gt;a2.&lt;"</span>;
+mml1 += <span class="string">"c+2. f+2. &gt;e2.&amp;e2.&amp;e2."</span>;
+mml1 += <span class="string">"ab&lt;c ed&gt;b&lt; dc&gt;b&lt; d2.&amp; d2d"</span>;
+mml1 += <span class="string">"efg acd ed&gt;b &lt;d2.&amp; d2d"</span>;
+mml1 += <span class="string">"| g2. f+2.&gt; bab&lt; c+de c+de&gt;"</span>;
+mml1 += <span class="string">"f+2. c0e0a0&lt;c2.&gt; d0f+0a0&lt;d2. ]"</span>;
+mml1 += <span class="string">"g2. f2.&gt; b&lt;cf edc edc&gt;"</span>;
+mml1 += <span class="string">"f2. c0e0a0&lt;c2.&gt; d0f0a0&lt;d2."</span>;
+
+T(<span class="string">"mml"</span>, {mml:[mml0, mml1]}, synth).on(<span class="string">"ended"</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+  <span class="keyword">this</span>.stop();
+}).set({buddies:master}).start();
+</code></pre>
+<p>The musical output is sublime, but what is going on here? If we squint things start to look like <a href="http://en.wikipedia.org/wiki/Brainfuck">Brainfuck</a>. I’ll be the first to admit that the deck is stacked. This is a loaded example as it leverages many of the fancy features from <a href="http://mohayonao.github.io/timbre.js">timbre.js</a> that have nothing to do with <span class="caps">MML</span>. Let’s make things a bit more fair, and focus on the the most important bit: the&nbsp;music.</p>
+<pre><code class="lang-javascript">mml0 = <span class="string">"t60 l4 v6 q2 o3"</span>;
+mml0 += <span class="string">"[ [g &lt; b0&lt;d0f+2&gt;&gt; d &lt;a0&lt;c+0f+2&gt;&gt;]8 "</span>;
+mml0 += <span class="string">"f+ &lt;a0&lt;c+0f+2&gt;&gt;&gt; b&lt;&lt;b0&lt;d0f+2&gt;&gt; e&lt;g0b2&gt; e&lt;b0&lt;d0g2&gt;&gt; d&lt;f0a0&lt;d2&gt;&gt;"</span>;
+mml0 += <span class="string">"&gt;a&lt;&lt;a0&lt;c0e2&gt;&gt; d&lt;g0b0&lt;e2&gt;&gt; d&lt;d0g0b0&lt;e2&gt;&gt; d&lt;c0e0a0&lt;d2&gt;&gt; d&lt;c0f+0a0&lt;d2&gt;&gt;"</span>;
+mml0 += <span class="string">"d&lt;a0&lt;c0f2&gt;&gt; d&lt;a0&lt;c0e2&gt;&gt; d&lt;d0g0b0&lt;e2&gt;&gt; d&lt;c0e0a0&lt;d2&gt;&gt; d&lt;c0f+0a0&lt;d2&gt;&gt;"</span>;
+mml0 += <span class="string">"| e&lt;b0&lt;e0g2&gt;&gt; f+&lt;a0&lt;c+0f+2&gt;&gt;&gt; b&lt;&lt;b0&lt;d0f+2&gt;&gt; e&lt;&lt;c+0e0a2&gt;&gt; e&lt;a0&lt;c+0f+0a2&gt;&gt;"</span>;
+mml0 += <span class="string">"eb0&lt;a0&lt;d&gt;e0b0&lt;d0g&gt;&gt; a0&lt;g2.&gt; d0a0&lt;d2.&gt; ]"</span>;
+mml0 += <span class="string">"e&lt;b0&lt;e0g2&gt;&gt; e&lt;a0&lt;d0f0a2&gt;&gt; e&lt;a0&lt;c0f2&gt;&gt; e&lt;&lt;c0e0a2&gt;&gt; e&lt;a0&lt;c0f0a2&gt;&gt;"</span>;
+mml0 += <span class="string">"eb0&lt;a0&lt;d&gt;e0b0&lt;d0g&gt;&gt; a0&lt;g2.&gt; d0a0&lt;d2.&gt;"</span>;
+
+mml1 = <span class="string">"t60 v14 l4 o6"</span>;
+mml1 += <span class="string">"[ r2. r2. r2. r2."</span>;
+mml1 += <span class="string">"rf+a gf+c+ &gt;b&lt;c+d &gt;a2. f+2.&amp; f+2.&amp; f+2.&amp; f+2.&lt; rf+a gf+c+ &gt;b&lt;c+d &gt;a2.&lt;"</span>;
+mml1 += <span class="string">"c+2. f+2. &gt;e2.&amp;e2.&amp;e2."</span>;
+mml1 += <span class="string">"ab&lt;c ed&gt;b&lt; dc&gt;b&lt; d2.&amp; d2d"</span>;
+mml1 += <span class="string">"efg acd ed&gt;b &lt;d2.&amp; d2d"</span>;
+mml1 += <span class="string">"| g2. f+2.&gt; bab&lt; c+de c+de&gt;"</span>;
+mml1 += <span class="string">"f+2. c0e0a0&lt;c2.&gt; d0f+0a0&lt;d2. ]"</span>;
+mml1 += <span class="string">"g2. f2.&gt; b&lt;cf edc edc&gt;"</span>;
+mml1 += <span class="string">"f2. c0e0a0&lt;c2.&gt; d0f0a0&lt;d2."</span>;
+</code></pre>
+<p>Even with blinders attached the world didn’t get any less terrifying. It is hard to imagine that even an expert could understand what is being described here without serious concentration. Part of the problem is how much noise JavaScript is making (with string concatenation, and general syntax). It is important to recognize that there is absolutely nothing wrong with this code, or its author; however, we need to keep in mind that to the novice, even one familiar with music and common music notation, it is enough to make the eyes glaze&nbsp;over.</p>
+<h2 id="we-can-do-better">We can do&nbsp;better</h2>
+<p>What if we could write these concepts (tempo, volume, instrument octave, notes, pitch, duration, and more) in code that will serialize to the appropriate <span class="caps">MML</span> representation? With the help of ClojureScript, and <a href="https://github.com/birdduck/mml">this handy library</a>, we can.</p>
+<p>This portion of the hand written melody&nbsp;<span class="caps">MML</span>…</p>
+<pre><code class="lang-mml">rf+a gf+c+ &gt;b&lt;c+d &gt;a2.
+</code></pre>
+<p>…can be represented with our ClojureScript library&nbsp;as…</p>
+<pre><code class="lang-clojure"><span class="list">(<span class="title"><span class="built_in">ns</span></span> gymnopédie.core
+  <span class="list">(<span class="attribute">:require</span> mml.core <span class="attribute">:as</span> mml)</span>)</span>
+
+<span class="list">(<span class="title"><span class="built_in">def</span></span> melody
+  <span class="list">(<span class="title">mml/mml</span>
+    <span class="list">(<span class="title">mml/tempo</span><span class="number"> 60</span>)</span> <span class="list">(<span class="title">mml/volume</span><span class="number"> 14</span>)</span> <span class="list">(<span class="title">mml/octave</span><span class="number"> 6</span>)</span>
+    <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/rest</span>)</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span> <span class="attribute">:a</span>)</span>
+    <span class="list">(<span class="title">mml/measure</span> <span class="attribute">:g</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:c</span>)</span>)</span>
+    <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/desc</span> <span class="attribute">:b</span>)</span> <span class="list">(<span class="title">mml/asc</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:c</span>)</span>)</span> <span class="attribute">:d</span>)</span>
+    <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/duration</span><span class="number"> 3</span> <span class="list">(<span class="title">mml/desc</span> <span class="attribute">:a</span>)</span>)</span>)</span>)</span>)</span>
+</code></pre>
+<p><strong><span class="caps">NOTE</span></strong>: It is important to understand that the <code>measure</code> function is for convenience and semantics. The following definition is equivalent to the&nbsp;previous.</p>
+<pre><code class="lang-clojure"><span class="list">(<span class="title"><span class="built_in">def</span></span> melody
+  <span class="list">(<span class="title">mml/mml</span>
+    <span class="list">(<span class="title">mml/tempo</span><span class="number"> 60</span>)</span> <span class="list">(<span class="title">mml/volume</span><span class="number"> 14</span>)</span> <span class="list">(<span class="title">mml/octave</span><span class="number"> 6</span>)</span>
+    <span class="list">(<span class="title">mml/rest</span>)</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span> <span class="attribute">:a</span>
+    <span class="attribute">:g</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:c</span>)</span>
+    <span class="list">(<span class="title">mml/desc</span> <span class="attribute">:b</span>)</span> <span class="list">(<span class="title">mml/asc</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:c</span>)</span>)</span> <span class="attribute">:d</span>
+    <span class="list">(<span class="title">mml/duration</span><span class="number"> 3</span> <span class="list">(<span class="title">mml/desc</span> <span class="attribute">:a</span>)</span>)</span>)</span>)</span>
+</code></pre>
+<p>…which would serialize&nbsp;as…</p>
+<pre><code class="lang-clojure"><span class="list">(<span class="title">println</span> melody)</span> <span class="comment">; t60 v14 o6 r f+ a g f+ c+ &gt;b &lt;c+ d &gt;a3</span>
+</code></pre>
+<p>The inevitable question after seeing a 22 character string of <span class="caps">MML</span> turned into a variable definition spanning seven lines of ClojureScript is likely: what was the point of this exercise? What did we gain? How did this library help <strong>me</strong>?</p>
+<p>Well, we’ve successfully hidden the symbols behind more human friendly equivalents, and though we may have to write more characters we can focus on music concepts rather than additional syntax. But perhaps the most compelling reason to use this abstraction is the ability to share, and compose blocks of <span class="caps">MML</span>. What does this mean,&nbsp;exactly?</p>
+<p>If you were looking closely at the <span class="caps">MML</span>, or are familiar with <a href="http://www.music-scores.com/graphics/sa_gy_1_pi.gif">the sheet music</a>, you know that our melody repeats. We can do some very slight refactoring to leverage our new found power bestowed upon us by the alien&nbsp;technology.</p>
+<p>We can turn this big long thing (with duplicate phrasing mind&nbsp;you)…</p>
+<pre><code class="lang-mml">rf+a gf+c+ &gt;b&lt;c+d &gt;a2. f+2.&amp; f+2.&amp; f+2.&amp; f+2.&lt; rf+a gf+c+ &gt;b&lt;c+d &gt;a2.
+</code></pre>
+<p>..into this refactored&nbsp;ClojureScript…</p>
+<pre><code class="lang-clojure"><span class="list">(<span class="title"><span class="built_in">ns</span></span> gymnopédie.core
+  <span class="list">(<span class="attribute">:require</span> mml.core <span class="attribute">:as</span> mml)</span>)</span>
+
+<span class="list">(<span class="title"><span class="built_in">def</span></span> melody
+  <span class="list">(<span class="title">mml/mml</span>
+    <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/rest</span>)</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span> <span class="attribute">:a</span>)</span>
+    <span class="list">(<span class="title">mml/measure</span> <span class="attribute">:g</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:c</span>)</span>)</span>
+    <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/desc</span> <span class="attribute">:b</span>)</span> <span class="list">(<span class="title">mml/asc</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:c</span>)</span>)</span> <span class="attribute">:d</span>)</span>
+    <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/duration</span><span class="number"> 3</span> <span class="list">(<span class="title">mml/desc</span> <span class="attribute">:a</span>)</span>)</span>)</span>)</span>)</span>
+
+<span class="list">(<span class="title"><span class="built_in">def</span></span> gymnopédie
+  <span class="list">(<span class="title">mml/mml</span>
+    <span class="list">(<span class="title">mml/tempo</span><span class="number"> 60</span>)</span> <span class="list">(<span class="title">mml/volume</span><span class="number"> 14</span>)</span> <span class="list">(<span class="title">mml/octave</span><span class="number"> 6</span>)</span>
+    melody
+    <span class="list">(<span class="title"><span class="built_in">apply</span></span> mml/mml
+      <span class="list">(<span class="title"><span class="built_in">for</span></span> <span class="collection">[m <span class="list">(<span class="title"><span class="built_in">range</span></span><span class="number"> 4</span>)</span>]</span>
+        <span class="list">(<span class="title">mml/measure</span> <span class="list">(<span class="title">mml/duration</span><span class="number"> 3</span> <span class="list">(<span class="title">mml/sharp</span> <span class="attribute">:f</span>)</span>)</span>)</span>)</span>)</span>
+    <span class="list">(<span class="title">mml/asc</span> melody)</span>)</span>)</span>
+</code></pre>
+<p>…which now serializes&nbsp;as…</p>
+<pre><code class="lang-clojure"><span class="list">(<span class="title">println</span> gymnopédie)</span>
+<span class="comment">; <span class="caps">NOTE</span>: line breaks added for clarity</span>
+<span class="comment">; t60 v14 o6</span>
+<span class="comment">; r f+ a g f+ c+ &gt;b &lt;c+ d &gt;a3</span>
+<span class="comment">; f+3 f+3 f+3 f+3</span>
+<span class="comment">; &lt;r f+ a g f+ c+ &gt;b &lt;c+ d &gt;a3</span>
+</code></pre>
+<p>Maybe it is not the greatest example, but hopefully you get the picture! <a href="https://clojars.org/com.birdduck/mml">Download the library from Clojars</a> to start making music of your own in&nbsp;ClojureScript.</p>
+</section>
+          <div id="disqus_thread"></div>
+          <script type="text/javascript">
+            (function () {
+              var disqus_shortname = 'birdducksoftware';
+              (function() {
+                  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+              })();
+            }());
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« The rest</a></div>
+        <section class="about">
+        </section>
+        <section class="copy">
+          <p>&copy; 2013-2015 Bird Duck Software &mdash; powered by&nbsp;<a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-48299345-1', 'birdducksoftware.com');
+      ga('send', 'pageview');
+      
+    </script>
+  </body>
+</html>
