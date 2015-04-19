@@ -90,10 +90,14 @@ hr {
 /* page header */
 
 .header {
-  background-image: url(http://imgstocks.com/wp-content/uploads/2013/12/Outer-space-wallpaper-41243.jpg);
+  background-image: url("../images/background.jpg");
   color: #836882;
   margin-top: 0;
   padding: 6em 0 3em;
+}
+
+.webp .header {
+  background-image: url("../images/background.webp");
 }
 
 .header h1 {
