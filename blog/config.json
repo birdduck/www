@@ -3,7 +3,10 @@
     "url": "http://birdducksoftware.com",
     "name": "Bird Duck Software",
     "owner": "Bird Duck Software",
-    "description": "We make it good."
+    "description": "We make it good.",
+    "twitter": {
+        "site": "@birdduckdev"
+    }
   },
   "plugins": [
     "./plugins/paginator.coffee"
