@@ -130,6 +130,7 @@ hr {
   text-align: center;
   font-weight: 400;
   letter-spacing: 1px;
+  margin-bottom: 0;
 }
 
 .header .author > span[itemprop] {
@@ -147,6 +148,10 @@ hr {
 .header .social-profiles {
   font-size: 0.8em;
   text-align: center;
+}
+
+.header .social-profiles button {
+  cursor: pointer;
 }
 
 .header .social-profiles > :not(:first-child) {

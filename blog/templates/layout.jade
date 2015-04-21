@@ -1,4 +1,4 @@
-include socialProfile
+include socialProfiles
 
 doctype html
 block vars
@@ -25,9 +25,7 @@ html(lang='en')
             h1
               a(href=locals.url)= locals.name
             p.description= locals.description
-            .social-profiles
-              each profile in locals.socialProfiles
-                mixin socialProfile(profile)
+            mixin socialProfiles(locals.socialProfiles)
     div#content
       div.content-wrap
         block content

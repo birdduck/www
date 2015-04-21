@@ -3,5 +3,9 @@
   "email": "the30yearswar@hotmail.com",
   "bio": "Proprietor.",
   "title": "Software Engineer",
-  "affiliation": "Rival IQ"
+  "affiliation": "Rival IQ",
+  "socialProfiles": [
+    {"name": "github", "url": "https://github.com/crteal"},
+    {"name": "twitter", "url": "https://twitter.com/crteal"}
+  ]
 }

@@ -21,6 +21,7 @@ block header
   p.author
     | #{ "Written by " }
     mixin author(page.metadata.author)
+  mixin socialProfiles(contents.authors[page.metadata.author + '.json'].metadata.socialProfiles)
 
 block content
   article.article
