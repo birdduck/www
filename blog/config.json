@@ -5,8 +5,12 @@
     "owner": "Bird Duck Software",
     "description": "We make it good.",
     "twitter": {
-        "site": "@birdduckdev"
-    }
+      "site": "@birdduckdev"
+    },
+    "socialProfiles": [
+      {"name": "github", "url": "https://github.com/birdduck"},
+      {"name": "twitter", "url": "https://twitter.com/birdduckdev"}
+    ]
   },
   "plugins": [
     "./plugins/paginator.coffee"

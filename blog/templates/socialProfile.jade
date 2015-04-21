@@ -1,0 +1,10 @@
+mixin socialProfile(profile)
+  a(href=profile.url, target="_blank")
+    button(type="button")
+      case profile.name
+        when "github"
+          i.fa.fa-github
+          |  GitHub
+        when "twitter"
+          i.fa.fa-twitter
+          |  Twitter
